@@ -69,6 +69,7 @@ zigzag_avg_denoise(float** image, int length, int width, int last_coef) {
 
     int bloc_i, bloc_j;
     int i, j, decalage_i, decalage_j;
+    int k = 0;
 
     for(i=0; i<length; i++)
         for(j=0; j<width; j++) {
@@ -98,13 +99,8 @@ zigzag_avg_denoise(float** image, int length, int width, int last_coef) {
                     // Copy back
                     for(i=0; i<8; i++)
                         for(j=0; j<8; j++) {
-                            image[(decalage_i + bloc_i * 8 + i) % length][(decalage_j + bloc_j * 8 + j) % width] = imagette[i][j];
+                            acc[(decalage_i + bloc_i * 8 + i) % length][(decalage_j + bloc_j * 8 + j) % width] += imagette[i][j];
                         }
-                }
-            
-            for(i=0; i<length; i++)
-                for(j=0; j<width; j++) {
-                    acc[i][j] += image[i][j];
                 }
         }
 
@@ -154,7 +150,7 @@ int main(int argc,char** argv)
     float best_mmse = INFINITY, mmse;
     int best_n = 0;
     
-    for(n=0; n<100; n++) {
+    for(n=0; n<=120; n++) {
 
         copy_matrix(img_denoise, ImgDegraded, length, width);
 
